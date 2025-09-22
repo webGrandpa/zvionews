@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Blueprint for a news Post
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  title     String
+  slug      String   @unique
+  content   String
+  imageUrl  String
+  views     String
+  
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+// Blueprint for a User
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String? // The '?' makes this optional
+  
+  posts Post[] // A list of posts made by this user
+}
