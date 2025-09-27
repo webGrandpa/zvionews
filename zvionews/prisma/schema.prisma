@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// prisma/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
@@ -10,25 +9,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Blueprint for a news Post
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  title     String
-  slug      String   @unique
-  content   String
-  imageUrl  String
-  views     String
-  
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-}
-
 // Blueprint for a User
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String? // The '?' makes this optional
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  password  String
+  role      Role     @default(USER)
+  posts     Post[]
+}
+
+// Model for Categories
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
+  posts Post[]
+}
+
+// Blueprint for a news Post
+model Post {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  title       String
+  slug        String   @unique
+  content     String
+  imageUrl    String
+  views       Int      @default(0)  
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
   
-  posts Post[] // A list of posts made by this user
+  // Relates a post to a Category
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
+}
+
+enum Role {
+  USER
+  ADMIN
 }

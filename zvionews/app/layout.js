@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AdBanner from "./components/AdBanner";
+import AuthProvider from './components/AuthProvider';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,14 +25,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen mt-20`}
       >
+        <AuthProvider>
         <Header />
         <div className="container mx-auto flex flex-col lg:flex-row gap-8 py-8">
           <div className="container mx-auto py-4 lg:hidden">
           <AdBanner />
           </div>
-          <aside className="w-1/5 hidden lg:block">
+          <aside className="w-1/5 hidden lg:block bg-[#dfebf3] rounded-lg shadow-lg">
             <AdBanner />
           </aside>
 
@@ -38,11 +41,12 @@ export default function RootLayout({ children }) {
             {children}
           </main>
 
-          <aside className="w-1/5 hidden lg:block">
+          <aside className="w-1/5 hidden lg:block bg-[#dfebf3] rounded-lg shadow-lg">
             <AdBanner />
           </aside>
           </div>
         <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

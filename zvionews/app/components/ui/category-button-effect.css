@@ -1,0 +1,41 @@
+/* category-button-effect.css */
+.category-button {
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 10px 20px;
+}
+
+.category-button::before,
+.category-button::after {
+  content: "";
+  position: absolute;
+  display: block;
+  border: 0 solid transparent;
+  width: 0%;
+  height: 0%;
+  transition: all 0.3s ease;
+}
+
+.category-button::after {
+  top: 0;
+  left: 0;
+  border-top: 2px solid transparent;
+  border-left: 2px solid transparent;
+}
+
+.category-button::before {
+  right: 0;
+  bottom: 0;
+  border-bottom: 2px solid transparent;
+  border-right: 2px solid transparent;
+}
+
+.category-button:hover::before,
+.category-button:hover::after,
+.category-button.active::before,
+.category-button.active::after {
+  width: 10px;
+  height: 10px;
+  border-color: #A6A6A6;
+}

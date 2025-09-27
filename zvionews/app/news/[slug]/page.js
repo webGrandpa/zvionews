@@ -1,41 +1,56 @@
-// app/news/[slug]/page.js
-
+import { PrismaClient } from '@prisma/client';
 import Image from 'next/image';
 import React from 'react';
+import { notFound } from 'next/navigation';
 
-const ArticlePage = ({ params }) => {
-  // 👇 PASTE THE ARRAY HERE
-  const mockArticles = [
-    { 
-      slug: 'first-article-title',
-      imageUrl: 'https://placehold.co/600x400/334155/white?text=News+Image',
-      title: 'This is the Title of the First Article',
-      excerpt: '...',
-      content: 'This is the full content of the first article...', // Make sure you have content
-      author: 'Giorgi Khiladze',
-      date: 'September 22, 2025',
-      views: '1.2k views'
+const prisma = new PrismaClient();
+
+async function getPostBySlug(slug) {
+  const post = await prisma.post.findUnique({
+    where: { slug },
+    include: {
+      author: true,
+      category: true,
     },
-    // ... all your other articles
-  ];
-  
-  const { slug } = params;
-  
-  // Now this line will work!
-  const article = mockArticles.find((post) => post.slug === slug);
+  });
 
-  // Add this check in case an article isn't found
-  if (!article) {
-    return <div>Article not found!</div>;
+  if (!post) {
+    notFound();
   }
 
+  return post;
+}
+
+const ArticlePage = async ({ params }) => {
+  const post = await getPostBySlug(params.slug);
+
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
-      <p className="text-gray-500 mb-8">{article.author} - {article.date}</p>
-      <Image src={article.imageUrl} alt={article.title} width={800} height={400} className="w-full object-cover rounded-lg mb-8" />
-      <div className="prose">
-        <p>{article.content}</p>
+    <div className="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-xl max-w-4xl">
+      <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{post.title}</h1>
+      <div className="flex items-center text-sm text-gray-500 mb-8">
+        <p className="mr-4">
+          <span className="font-semibold">ავტორი:</span> {post.author.name}
+        </p>
+        <p className="mr-4">
+          <span className="font-semibold">თარიღი:</span> {post.createdAt.toLocaleDateString()}
+        </p>
+        <p>
+          <span className="font-semibold">კატეგორია:</span> {post.category.name}
+        </p>
+      </div>
+
+      <div className="relative w-full h-96 mb-8 overflow-hidden rounded-lg">
+        <Image 
+          src={post.imageUrl} 
+          alt={post.title} 
+          fill
+          objectFit="cover"
+          className="rounded-lg"
+        />
+      </div>
+
+      <div className="prose max-w-none text-gray-800 leading-relaxed">
+        <p>{post.content}</p>
       </div>
     </div>
   );

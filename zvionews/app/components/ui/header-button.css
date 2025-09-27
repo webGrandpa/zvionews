@@ -1,0 +1,20 @@
+/* buttons.css */
+
+.fill-in-button {
+  background:  #4A628A;
+  border: 2px solid;
+  font: inherit;
+  line-height: 1;
+  padding: 0.5rem 1rem;
+  transition: 0.25s;
+  color: #ffffff;
+  border-color: var(--color);
+  border-radius: 5px;
+}
+
+.fill-in-button:hover,
+.fill-in-button:focus {
+  box-shadow: inset 0 0 0 2em var(--hover);
+  border-color: var(--hover);
+  color: #fff;
+}
